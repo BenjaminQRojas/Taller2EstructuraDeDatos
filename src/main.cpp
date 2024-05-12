@@ -1,3 +1,6 @@
+#include "include/Cliente.h"
+#include "include/ClientePreferencial.h"
+#include <queue>
 #include <iostream>
 
 /*
@@ -37,7 +40,101 @@ detalles:
         No se pueden utilizar librerías para la creación de las listas/hashmap
 */
 
+void dar_numero(std::queue<Cliente*> &cola_comun, 
+                std::queue<ClientePreferencial*> &cola_preferencial){
+    int opcion;
+    
+    std::string nombre;
+    int edad;
+    std::string preferencia;
+
+    std::cout<<"ingrese nombre: "<<std::endl;
+    std::cin>>nombre;
+    std::cout<<"ingrese edad: "<<std::endl;
+    std::cin>>edad;
+    std::cout<<"discapacidad (1) / embarazada (2) / nada (3)"<<std::endl;
+    std::cin>>opcion;
+    if(edad >= 60){
+        preferencia = "tercera edad";
+    }
+    switch (opcion)
+    {
+    case 1:
+        preferencia = "discapacidad";
+        break;
+    case 2:
+        preferencia = "embarazada";
+        break;
+    default:
+        preferencia = "nada";
+        break;
+    }
+    if(preferencia == "nada"){
+        Cliente* cliente = new Cliente(nombre, edad);
+        cola_comun.push(cliente);
+    }else{
+        ClientePreferencial* clientepref = new ClientePreferencial(nombre, edad, preferencia);
+        cola_preferencial.push(clientepref);
+    }
+}
+
+void fila(std::queue<Cliente*> &cola_comun, 
+          std::queue<ClientePreferencial*> &cola_preferencial){
+    int opcion;
+    std::cout<<"MENU"<<std::endl;
+    std::cout<<"(1) agregar clientes a la cola"<<std::endl;
+    std::cout<<"(2) finalizar"<<std::endl;
+    std::cin>>opcion;
+    while(opcion != 2){
+        dar_numero(cola_comun, cola_preferencial);
+        std::cout<<"cliente agregado a la cola"<<std::endl;
+        std::cout<<"(1) agregar clientes a la cola"<<std::endl;
+        std::cout<<"(2) finalizar"<<std::endl;
+        std::cin>>opcion;
+    }
+}
+
+/**
+ * ordenar cola preferencial
+*/
+void ordenar_colas(std::queue<ClientePreferencial*>  &cola_1,
+                   std::queue<ClientePreferencial*>  &cola_2, 
+                   std::queue<ClientePreferencial*>  &cola_aux, 
+                   std::string pref)
+{
+    while(!cola_1.empty())//mientras no sea vacio
+    {
+        if(cola_1.front() -> getPreferencia() == pref){//si el elemento es igual a pref(tercera edad, discapacidad, embarazada)
+            ClientePreferencial* elemento = cola_1.front();
+            
+            cola_1.pop();
+            cola_2.push(elemento);
+            
+        }else{//todo lo demas a cola aux
+            ClientePreferencial* elemento = cola_1.front();
+            cola_1.pop();
+            cola_aux.push(elemento);
+        }
+    }
+    cola_1.swap(cola_aux);//cambia la cola_1 con cola_aux
+}
+
+void mostrar_cola(std::queue<ClientePreferencial*> cola){
+    while(!cola.empty()){
+        std::cout<<cola.front() -> getNombre() + " " +cola.front() -> getPreferencia()<<std::endl;
+        cola.pop();
+    }
+}
+
 int main(){
-    std::cout<<"inicio programa"<<std::endl;
+    std::queue<Cliente*> cola_comun; 
+    std::queue<ClientePreferencial*> cola_1; //cola principal (llena al inicio, vacia al final)
+    std::queue<ClientePreferencial*> cola_aux; //cola auxiliar (vacia)
+    std::queue<ClientePreferencial*> cola_2; //cola 2 o final(?) (vacia al inicio, llena al final)
+    fila(cola_comun, cola_1);
+    ordenar_colas(cola_1,cola_2,cola_aux,"tercera edad");//pone los 1 en cola_2
+    ordenar_colas(cola_1,cola_2,cola_aux,"embarazada");//pone los 2 en cola_2
+    ordenar_colas(cola_1,cola_2,cola_aux,"discapacidad");//pone los 3 en cola_2
+    mostrar_cola(cola_2);
     return 0;
 }
