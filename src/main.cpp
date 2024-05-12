@@ -53,23 +53,25 @@ void dar_numero(std::queue<Cliente*> &cola_comun,
     std::cin>>nombre;
     std::cout<<"ingrese edad: "<<std::endl;
     std::cin>>edad;
-    std::cout<<"discapacidad (1) / embarazada (2) / nada (3)"<<std::endl;
-    std::cin>>opcion;
     if(edad >= 60){
         preferencia = "tercera edad";
+    }else{
+        std::cout<<"discapacidad (1) / embarazada (2) / nada (3)"<<std::endl;
+        std::cin>>opcion;
+        switch (opcion)
+        {
+        case 1:
+            preferencia = "discapacidad";
+            break;
+        case 2:
+            preferencia = "embarazada";
+            break;
+        default:
+            preferencia = "nada";
+            break;
+        }
     }
-    switch (opcion)
-    {
-    case 1:
-        preferencia = "discapacidad";
-        break;
-    case 2:
-        preferencia = "embarazada";
-        break;
-    default:
-        preferencia = "nada";
-        break;
-    }
+    
     if(preferencia == "nada"){
         Cliente* cliente = new Cliente(nombre, edad);
         cola_comun.push(cliente);
