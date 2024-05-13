@@ -1,4 +1,4 @@
-#include </workspaces/Taller2EstructuraDeDatos/include/ClientePreferencial.h>
+#include "../include/ClientePreferencial.h"
 
 ClientePreferencial::ClientePreferencial(){};
 
