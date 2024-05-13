@@ -157,6 +157,47 @@ void mostrar_cola1(std::queue<Cliente*> cola){
         cola.pop();
     }
 }
+void generarVenta(Bodega& bodega,std::vector<std::string>& productos){
+    std::cout<< "**GESTIONAR VENTA**" << std::endl;
+    std::cout << "Se generó la venta con los siguientes productos:\n";
+    // Recorre la lista de productos vendidos
+    for (const std::string& nombreProducto : productosVendidos) {
+        // Busca el producto en la bodega
+        Producto* producto = bodega.obtenerProducto(nombreProducto);
+        if (producto != nullptr) {
+            // Resta el stock vendido del producto
+            int stockActual = bodega.obtenerStockProducto(nombreProducto);
+            int cantidadVendida = 1; // Suponiendo que se vende una unidad a la vez
+            bodega.actualizarStock(nombreProducto, stockActual - cantidadVendida);
+            // Verifica si el stock es menor o igual a cero y elimina el producto si es el caso
+            if (bodega.obtenerStockProducto(nombreProducto) <= 0) {
+                // Aquí podrías implementar lógica adicional si un producto se queda sin stock
+            }
+        } else {
+            std::cerr << "Error: Producto no encontrado en la bodega: " << nombreProducto << std::endl;
+            // Aquí podrías manejar la situación de un producto no encontrado de otra manera si lo deseas
+        }
+    }
+
+}  
+void ingresarPedido(Bodega& bodega){
+    std::vector<std::string> productosSolicitados;
+    std::cout << "Ingrese los productos que el cliente solicita (Ingrese 'fin' para finalizar):\n";
+    std::string producto;
+    while (true) {
+        std::cout << "Producto: ";
+        std::getline(std::cin, producto);
+        // si producto no esta 
+
+        if (producto == "fin") {
+            break;  // Salir del bucle si se ingresa 'fin'
+        }
+
+        productosSolicitados.push_back(producto);  // Agregar el producto a la lista
+    }
+    //llamar a una función para generar la venta con los productos ingresados
+    generarVenta(bodega,productosSolicitados);
+}
 
 void GestionarCliente(){
     int opcion=0;
@@ -176,6 +217,8 @@ void GestionarCliente(){
 
     mostrar_cola(cola_2);
     mostrar_cola1(cola_comun);
+    Bodega& bodega;
+    ingresarPedido(bodega);
 
 
 }
