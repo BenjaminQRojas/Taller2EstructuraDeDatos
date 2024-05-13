@@ -3,6 +3,7 @@
 #include "../include/Cliente.h"
 #include "../include/ClientePreferencial.h"
 #include "../include/Producto.h"
+using namespace std;
 
 
 /*
@@ -30,6 +31,9 @@ detalles:
         Uso de queue/stack para manejo de fila de clientes.
         No se pueden utilizar librerías para la creación de las listas/hashmap
 */
+int leerArchivoBodega(){
+    
+}
 
 void dar_numero(std::queue<Cliente*> &cola_comun, 
                 std::queue<ClientePreferencial*> &cola_preferencial){
@@ -39,12 +43,12 @@ void dar_numero(std::queue<Cliente*> &cola_comun,
     int edad;
     std::string preferencia;
 
-    std::cout<<"ingrese nombre: "<<std::endl;
+    std::cout<<"Ingrese nombre: "<<std::endl;
     std::cin>>nombre;
-    std::cout<<"ingrese edad: "<<std::endl;
+    std::cout<<"Ingrese edad: "<<std::endl;
     std::cin>>edad;
     if(edad >= 60){
-        preferencia = "tercera edad";
+        preferencia = "Tercera edad";
     }else{
         std::cout<<"discapacidad (1) / embarazada (2) / nada (3)"<<std::endl;
         std::cin>>opcion;
@@ -75,14 +79,15 @@ void fila(std::queue<Cliente*> &cola_comun,
           std::queue<ClientePreferencial*> &cola_preferencial){
     int opcion;
     std::cout<<"MENU"<<std::endl;
-    std::cout<<"(1) agregar clientes a la cola"<<std::endl;
-    std::cout<<"(2) finalizar"<<std::endl;
+    std::cout<<"(1) Agregar clientes a la cola"<<std::endl;
+    std::cout<<"(2) Finalizar"<<std::endl;
     std::cin>>opcion;
     while(opcion != 2){
         dar_numero(cola_comun, cola_preferencial);
-        std::cout<<"cliente agregado a la cola"<<std::endl;
-        std::cout<<"(1) agregar clientes a la cola"<<std::endl;
-        std::cout<<"(2) finalizar"<<std::endl;
+        std::cout<<"Cliente agregado a la cola"<<std::endl;
+        std::cout<<"************"<<std::endl;
+        std::cout<<"(1) Agregar clientes a la cola"<<std::endl;
+        std::cout<<"(2) Finalizar"<<std::endl;
         std::cin>>opcion;
     }
 }
@@ -118,19 +123,81 @@ void mostrar_cola(std::queue<ClientePreferencial*> cola){
         cola.pop();
     }
 }
+void mostrar_cola1(std::queue<Cliente*> cola){
+    while(!cola.empty()){
+        std::cout<<cola.front() -> getNombre() + " " <<std::endl;
+        cola.pop();
+    }
+}
 
-int main(){
+void GestionarCliente(){
+    int opcion=0;
+    std::cout<< "**GESTIONAR CLIENTE**" << std::endl;
+    //ENTREGAR NUMEROS
+    //LLAMAR A SIGUIENTE CLIENTE
+    // INGRESAR CLIENTE A LA COLA 
+    //PREGUNTAR POR LA COMPRA DEL PRODUCTO Y UNIRLO CON LA GESTION DE VENTA?
     std::queue<Cliente*> cola_comun; 
     std::queue<ClientePreferencial*> cola_1; //cola principal (llena al inicio, vacia al final)
     std::queue<ClientePreferencial*> cola_aux; //cola auxiliar (vacia)
     std::queue<ClientePreferencial*> cola_2; //cola 2 o final(?) (vacia al inicio, llena al final)
-    /*
     fila(cola_comun, cola_1);
     ordenar_colas(cola_1,cola_2,cola_aux,"tercera edad");//pone los 1 en cola_2
     ordenar_colas(cola_1,cola_2,cola_aux,"embarazada");//pone los 2 en cola_2
-    ordenar_colas(cola_1,cola_2,cola_aux,"discapacidad");//pone los 3 en cola_2
+    ordenar_colas(cola_1,cola_2,cola_aux,"dicapacidad");//pone los 3 en cola_2
+
     mostrar_cola(cola_2);
-    */
-    std::cout<<"programa terminado"<<std::endl;
-    return 0;
+    mostrar_cola1(cola_comun);
+
+
 }
+
+
+void GestionarVenta(){
+    int opcion=0;
+    std::cout<< "**GESTIONAR VENTA**" << std::endl;
+    //AGREGAR PRODUCTO A LA BODEGA
+    //GENERAR BOLETAS DE VENTA
+    //VER BODEGA(= VER PRODUCTO) 
+
+}
+
+void interfazUsuario(){
+    int opcion=0;
+    std::cout<< "Bienvenido" << std::endl;
+    std::cout << "(1) Gestionar Clientes" << std::endl;
+    std::cout << "(2) Gestionar Venta" << std:: endl;
+    std::cout << "(3) salir" << std::endl;
+
+    std::cout << "Ingrese una opcion:" << std::endl;
+    std::cin >> opcion;
+    
+    while (opcion != 1 && opcion != 2 && opcion != 3 && opcion != 4 && opcion != 5){
+        std::cin.clear();
+
+        std::cout << "opcion ingresada no valida" << std::endl;
+        std::cout << "Ingrese una opcion:" << std::endl;
+        std::cin >> opcion;
+
+    }
+
+    switch (opcion) {
+    case 1:
+        GestionarCliente();
+        break;
+    case 2:
+        GestionarVenta();
+        break;
+    case 3:
+     std::cout << "Saliendo del programa..." << std::endl;
+        break;
+
+
+    }
+}   
+
+int main(){
+    interfazUsuario();
+    leerArchivoBodega();
+    return 0;
+};
