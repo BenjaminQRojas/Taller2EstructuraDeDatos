@@ -5,7 +5,6 @@
 #include "../include/Producto.h"
 using namespace std;
 
-
 /*
 problema: 
     Una farmacia necesita un programa para organizar las ventas del local, dentro
