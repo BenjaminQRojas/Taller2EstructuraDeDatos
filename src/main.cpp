@@ -31,10 +31,38 @@ detalles:
         Uso de queue/stack para manejo de fila de clientes.
         No se pueden utilizar librerías para la creación de las listas/hashmap
 */
-int leerArchivoBodega(){
-    
-}
+int leerArchivoBodega(Bodega& bodega){
+    std::ifstream archivo("Bodega.txt");
 
+     if (!archivo.is_open()) {
+        std::cerr << "El archivo de la bodega no existe." << std::endl;
+    }
+
+    std::string linea;
+    while (std::getline(archivo, linea)) {
+        std::stringstream ss(linea);
+        std::string nombre, categoria, subcategoria;
+        float precio;
+        int id, stock;
+        char comma;
+        if (std::getline(ss,nombre, ',') &&
+            std::getline(ss, categoria , ',') &&
+            std::getline(ss,subcategoria, ',') &&
+            (ss >> precio >> comma) &&
+            (ss >> id >> comma) &&
+            (ss >> stock)) {
+            // Crea un objeto Producto con los datos extraídos
+            Producto* producto = new Producto(nombre,categoria, subcategoria, precio, id);
+            // Agrega el producto a la bodega con su respectivo stock
+            bodega.agregarProductos(nombre, producto, stock);
+        } else {
+            std::cerr << "Error al analizar la línea: " << linea << std::endl;
+        }
+    }
+    // Cierra el archivo
+    archivo.close();
+    
+}    
 void dar_numero(std::queue<Cliente*> &cola_comun, 
                 std::queue<ClientePreferencial*> &cola_preferencial){
     int opcion;
