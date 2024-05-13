@@ -5,7 +5,7 @@ Producto::Producto(std::string nombre,
                   std::string categoria, 
                   std::string subCategoria, 
                   float precio, 
-                  int id): 
+                  int id)
 {
     this -> nombre = nombre;
     this -> categoria = categoria;
