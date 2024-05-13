@@ -1,7 +1,8 @@
 #include <queue>
 #include <iostream>
-#include </workspaces/Taller2EstructuraDeDatos/include/Cliente.h>
-#include </workspaces/Taller2EstructuraDeDatos/include/ClientePreferencial.h>
+#include "../include/Cliente.h"
+#include "../include/ClientePreferencial.h"
+#include "/include/Producto.h"
 
 
 /*
