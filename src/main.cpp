@@ -225,7 +225,8 @@ void interfazUsuario(){
 }   
 
 int main(){
+    Bodega bodega;
     interfazUsuario();
-    leerArchivoBodega();
+    leerArchivoBodega(bodega);
     return 0;
 };
