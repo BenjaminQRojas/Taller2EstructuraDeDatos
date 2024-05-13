@@ -24,17 +24,6 @@ detalles:
         donde se puedan cargar todos los productos Al iniciar el programa, con
         un mínimo de 5 categorías, 2 sub-categorías por categoría y al menos 3
         tipos de producto por sub-categoría)
-    Tipos de Clientes:
-        Los clientes tienen que ser identificados por tipo (cliente normal, cliente
-        preferencial) para poder entregar un número de atención.
-        Los clientes preferenciales pueden dividirse en “Tercera edad”,
-        “Embarazadas”, “Discapacidad” y estos deben atenderse primero si es
-        que se encuentran en la fila (el orden de atención siempre es tercera
-        edad>Discapacidad>Embarazada).
-    Flujo básico de caja:
-        Se atiende nuevo cliente si es que hay alguno en la fila → se ingresan
-        productos que cliente solicito → se genera venta → se llama a nuevo
-        cliente si es que hay alguno en fila
     Uso de listas y otras estructuras:
         Uso de listas (específicamente uso de hashmap o similar) para manejo
         de productos
@@ -135,10 +124,13 @@ int main(){
     std::queue<ClientePreferencial*> cola_1; //cola principal (llena al inicio, vacia al final)
     std::queue<ClientePreferencial*> cola_aux; //cola auxiliar (vacia)
     std::queue<ClientePreferencial*> cola_2; //cola 2 o final(?) (vacia al inicio, llena al final)
+    /*
     fila(cola_comun, cola_1);
     ordenar_colas(cola_1,cola_2,cola_aux,"tercera edad");//pone los 1 en cola_2
     ordenar_colas(cola_1,cola_2,cola_aux,"embarazada");//pone los 2 en cola_2
     ordenar_colas(cola_1,cola_2,cola_aux,"discapacidad");//pone los 3 en cola_2
     mostrar_cola(cola_2);
+    */
+    std::cout<<"programa terminado"<<std::endl;
     return 0;
 }
