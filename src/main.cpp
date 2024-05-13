@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../include/Cliente.h"
 #include "../include/ClientePreferencial.h"
-#include "/include/Producto.h"
+#include "../include/Producto.h"
 
 
 /*
