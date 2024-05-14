@@ -30,11 +30,12 @@ int leerArchivoBodega(Bodega* &bodega){
     std::ifstream archivoBodega("data/Bodega.txt");
     std::ifstream archivoStock("data/StockBodega.txt");
     if (!archivoBodega.is_open()) {
-        std::cerr << "El archivo de la bodega no existe." << std::endl;
-    }else{
-        if(!archivoStock.is_open()){
-            std::cerr << "El archivo de la bodega no existe." << std::endl;
-        }
+        std::cerr << "El archivo de la bodega no se puede abrir." << std::endl;
+        return -1; // Retorna un código de error
+    }
+    if (!archivoStock.is_open()) {
+        std::cerr << "El archivo de stock no se puede abrir." << std::endl;
+        return -1; // Retorna un código de error
     }
     
 
@@ -71,6 +72,7 @@ int leerArchivoBodega(Bodega* &bodega){
     // Cierra los archivos
     archivoBodega.close();
     archivoStock.close();
+    return 0;
 }
 
 
@@ -274,7 +276,8 @@ void Menu(Bodega* &bodega){
 
 int main(){
     Bodega* bodega = new Bodega();
-    Menu(bodega);
-    leerArchivoBodega(bodega);
+    if(leerArchivoBodega(bodega) == 0){
+        Menu(bodega);
+    }
     return 0;
 };
