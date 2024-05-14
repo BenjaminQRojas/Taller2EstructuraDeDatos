@@ -211,14 +211,6 @@ void GestionarCliente(std::queue<Cliente*> &cola_comun,
     ordenar_colas(cola_1,cola_2,cola_aux,"dicapacidad");//pone los 3 en cola_2
 }
 
-void agregarProductosCliente(Bodega* &bodega, Cliente* &cliente){
-    //imprimir cliente
-    std::cout<<"Cliente: "<<cliente ->getNombre()<<std::endl;
-    //imprimir productos de la bodega
-    std::cout<<bodega ->obtenerTodosLosProductos()<<std::endl;
-
-}
-
 void GestionarVenta(std::queue<Cliente*> &cola_comun,
                     std::queue<ClientePreferencial*> &cola_pref,
                     Bodega* &bodega){
@@ -228,14 +220,15 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
     while(!cola_comun.empty() || !cola_pref.empty()){
         //primero atender a los clientes de la cola preferencial
         while(!cola_pref.empty()){
-            Cliente* cliente = cola_pref.front();
-            agregarProductosCliente(bodega,cliente);
+            ClientePreferencial* cliente = cola_pref.front();
+            std::cout<<cliente ->getNombre()<<std::endl;
+            
             cola_pref.pop();
         }
         //segundo, atender a los clientes de la cola comun
         while(!cola_comun.empty()){
             Cliente* cliente = cola_comun.front();
-            agregarProductosCliente(bodega,cliente);
+            
             cola_comun.pop();
         }
     }
