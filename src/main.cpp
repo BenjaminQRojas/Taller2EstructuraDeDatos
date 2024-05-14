@@ -230,11 +230,13 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
         while(!cola_pref.empty()){
             Cliente* cliente = cola_pref.front();
             agregarProductosCliente(bodega,cliente);
+            cola_pref.pop();
         }
         //segundo, atender a los clientes de la cola comun
         while(!cola_comun.empty()){
             Cliente* cliente = cola_comun.front();
             agregarProductosCliente(bodega,cliente);
+            cola_comun.pop();
         }
     }
 
