@@ -37,3 +37,17 @@ int Bodega::obtenerStockProducto(std::string nombre_producto)
         return -1; 
     }
 };
+
+std::string Bodega::obtenerTodosLosProductos() {
+    std::stringstream ss;
+
+    ss << "Productos en la bodega:\n";
+    for (const auto& par : productos) {
+        std::string nombre = par.first;
+        Producto* producto = par.second;
+        int stock = stocks[nombre];
+        ss << "Nombre: " << nombre << ", Stock: " << stock << std::endl;
+    }
+
+    return ss.str();
+};

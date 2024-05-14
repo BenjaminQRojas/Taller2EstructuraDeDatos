@@ -1,5 +1,6 @@
 #include "Producto.h"
 #include <iostream>
+#include <sstream>
 #include <map>
 #include <unordered_map>
 
@@ -18,4 +19,6 @@ class Bodega{
         Producto* obtenerProducto(std::string nombre_producto);
         //metodo obtener stock de un producto en especifico
         int obtenerStockProducto(std::string nombre_producto);
+        //metodo obtener todos los productos en un string
+        std::string obtenerTodosLosProductos();
 };
