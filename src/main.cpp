@@ -22,8 +22,8 @@ requerimientos:
 */
 
 int leerArchivoBodega(Bodega* &bodega){
-    std::ifstream archivoBodega("/data/Bodega.txt");
-    std::ifstream archivoStock("/data/StockBodega.txt");
+    std::ifstream archivoBodega("data/Bodega.txt");
+    std::ifstream archivoStock("data/StockBodega.txt");
     if (!archivoBodega.is_open()) {
         std::cerr << "El archivo de la bodega no existe." << std::endl;
     }else{
@@ -52,6 +52,7 @@ int leerArchivoBodega(Bodega* &bodega){
                     Producto* producto = new Producto(nombre,categoria, subcategoria, precio, idProducto);
                     if(idProducto == idStock){
                         // Agrega el producto a la bodega con su respectivo stock
+                        std::cout<<"producto "+nombre+" agregado con stock " << stock<<std::endl;
                         bodega -> agregarProductos(nombre, producto, stock);
                     }else{
                         // Agrega el producto a la bodega con stock 0
