@@ -17,7 +17,7 @@ class Producto{
     //getters
     std::string getNombre();
     std::string getCategoria();
-    std::string getSubcategoria();
+    std::string getSubCategoria();
     float getPrecio();
     int getID();
 };

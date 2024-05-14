@@ -3,13 +3,13 @@
 // Constructor
 Producto::Producto(std::string nombre, 
                   std::string categoria, 
-                  std::string subCategoria, 
+                  std::string subcategoria, 
                   float precio, 
                   int id)
 {
     this -> nombre = nombre;
     this -> categoria = categoria;
-    this -> subCategoria = subCategoria;
+    this -> subcategoria = subcategoria;
     this -> precio = precio;
     this -> id = id;
   
@@ -27,7 +27,7 @@ std::string Producto::getCategoria(){
 }
 
 std::string Producto::getSubCategoria(){
-    return subCategoria;
+    return subcategoria;
 }
 
 float Producto::getPrecio(){

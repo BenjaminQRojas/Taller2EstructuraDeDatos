@@ -1,9 +1,11 @@
 #include <queue>
 #include <iostream>
-#include "../include/Cliente.h"
-#include "../include/ClientePreferencial.h"
-#include "../include/Producto.h"
-using namespace std;
+#include <fstream>
+#include <sstream>
+//#include "../include/Cliente.h"
+//#include "../include/ClientePreferencial.h"
+//#include "../include/Producto.h"
+#include "../include/Bodega.h"
 
 /*
 problema: 
@@ -17,51 +19,54 @@ requerimientos:
         - usar punteros, pilas y colas
         - interfaz de usuario
         - persistencia de datos (cargar y guardar datos)
-detalles:
-    Tipos de Producto:
-        Los productos de la farmacia tienen categoría y sub-categoría, precio por
-        producto e ID por producto. (Es necesario tener un archivo de “Bodega”
-        donde se puedan cargar todos los productos Al iniciar el programa, con
-        un mínimo de 5 categorías, 2 sub-categorías por categoría y al menos 3
-        tipos de producto por sub-categoría)
-    Uso de listas y otras estructuras:
-        Uso de listas (específicamente uso de hashmap o similar) para manejo
-        de productos
-        Uso de queue/stack para manejo de fila de clientes.
-        No se pueden utilizar librerías para la creación de las listas/hashmap
 */
-int leerArchivoBodega(Bodega& bodega){
-    std::ifstream archivo("Bodega.txt");
 
-     if (!archivo.is_open()) {
+int leerArchivoBodega(Bodega* &bodega){
+    std::ifstream archivoBodega("/data/Bodega.txt");
+    std::ifstream archivoStock("/data/StockBodega.txt");
+    if (!archivoBodega.is_open()) {
         std::cerr << "El archivo de la bodega no existe." << std::endl;
+    }else{
+        if(!archivoStock.is_open()){
+            std::cerr << "El archivo de la bodega no existe." << std::endl;
+        }
     }
+    
 
-    std::string linea;
-    while (std::getline(archivo, linea)) {
-        std::stringstream ss(linea);
+    std::string lineaBodega;
+    std::string lineaStock;
+    while (std::getline(archivoBodega, lineaBodega) && std::getline(archivoStock,lineaStock)) {
+        std::stringstream ssBodega(lineaBodega);
+        std::stringstream ssStock(lineaStock);
         std::string nombre, categoria, subcategoria;
         float precio;
-        int id, stock;
+        int idProducto,idStock,stock;
         char comma;
-        if (std::getline(ss,nombre, ',') &&
-            std::getline(ss, categoria , ',') &&
-            std::getline(ss,subcategoria, ',') &&
-            (ss >> precio >> comma) &&
-            (ss >> id >> comma) &&
-            (ss >> stock)) {
-            // Crea un objeto Producto con los datos extraídos
-            Producto* producto = new Producto(nombre,categoria, subcategoria, precio, id);
-            // Agrega el producto a la bodega con su respectivo stock
-            bodega.agregarProductos(nombre, producto, stock);
+        if (std::getline(ssBodega,nombre, ',') &&
+            std::getline(ssBodega, categoria , ',') &&
+            std::getline(ssBodega,subcategoria, ',') &&
+            (ssBodega >> precio >> comma) &&
+            (ssBodega >> idProducto)){
+                if((ssStock >> idStock >> comma) && (ssStock >> stock)){
+                    // Crea un objeto Producto con los datos extraídos
+                    Producto* producto = new Producto(nombre,categoria, subcategoria, precio, idProducto);
+                    if(idProducto == idStock){
+                        // Agrega el producto a la bodega con su respectivo stock
+                        bodega -> agregarProductos(nombre, producto, stock);
+                    }else{
+                        // Agrega el producto a la bodega con stock 0
+                        bodega -> agregarProductos(nombre, producto, 0);
+                    }
+                }
         } else {
-            std::cerr << "Error al analizar la línea: " << linea << std::endl;
+            std::cerr << "Error al analizar las líneas: " +lineaBodega+ " "+lineaStock <<std::endl;
         }
     }
     // Cierra el archivo
-    archivo.close();
-    
-}    
+    archivoBodega.close();
+    archivoStock.close();
+}
+/*
 void dar_numero(std::queue<Cliente*> &cola_comun, 
                 std::queue<ClientePreferencial*> &cola_preferencial){
     int opcion;
@@ -119,9 +124,7 @@ void fila(std::queue<Cliente*> &cola_comun,
     }
 }
 
-/**
- * ordenar cola preferencial
-*/
+
 void ordenar_colas(std::queue<ClientePreferencial*>  &cola_1,
                    std::queue<ClientePreferencial*>  &cola_2, 
                    std::queue<ClientePreferencial*>  &cola_aux, 
@@ -160,7 +163,7 @@ void generarVenta(Bodega& bodega,std::vector<std::string>& productos){
     std::cout<< "**GESTIONAR VENTA**" << std::endl;
     std::cout << "Se generó la venta con los siguientes productos:\n";
     // Recorre la lista de productos vendidos
-    for (const std::string& nombreProducto : productosVendidos) {
+    for (const std::string& nombreProducto : productos) {
         // Busca el producto en la bodega
         Producto* producto = bodega.obtenerProducto(nombreProducto);
         if (producto != nullptr) {
@@ -265,10 +268,10 @@ void interfazUsuario(){
 
     }
 }   
-
+*/
 int main(){
-    Bodega bodega;
-    interfazUsuario();
+    Bodega* bodega = new Bodega();
+    //interfazUsuario();
     leerArchivoBodega(bodega);
     return 0;
 };
