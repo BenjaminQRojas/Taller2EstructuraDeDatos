@@ -7,20 +7,6 @@
 #include "../include/Producto.h"
 #include "../include/Bodega.h"
 
-/*
-problema: 
-    Una farmacia necesita un programa para organizar las ventas del local, dentro
-    de los requerimientos del software, se espera poder conocer la cantidad de
-    productos en bodega por categoría y sub-categoría, generar boletas de venta y
-    manejo de clientes utilizando un sistema de colas con preferencia.
-requerimientos:
-    tecnicos:
-        - usar POO
-        - usar punteros, pilas y colas
-        - interfaz de usuario
-        - persistencia de datos (cargar y guardar datos)
-*/
-
 /**
  * Funcion para leer archio bodega y el archivo stock, para luego guardar los datos en la clase
  * bodega.
@@ -38,7 +24,6 @@ int leerArchivoBodega(Bodega* &bodega){
         return -1; // Retorna un código de error
     }
     
-
     std::string lineaBodega;
     std::string lineaStock;
     while (std::getline(archivoBodega, lineaBodega) && std::getline(archivoStock,lineaStock)) {
