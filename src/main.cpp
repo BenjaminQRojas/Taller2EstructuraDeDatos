@@ -108,24 +108,35 @@ void ingresarPedido(Bodega* &bodega){
 }
 
 void dar_numero(std::queue<Cliente*> &cola_comun, 
-                std::queue<ClientePreferencial*> &cola_preferencial){
+                std::queue<ClientePreferencial*> &cola_preferencial) {
     int opcion;
-
     std::string nombre;
     int edad;
     std::string preferencia;
 
-    std::cout<<"Ingrese nombre: "<<std::endl;
-    std::cin>>nombre;
-    std::cout<<"Ingrese edad: "<<std::endl;
-    std::cin>>edad;
-    if(edad >= 60){
+    std::cout << "Ingrese nombre: " << std::endl;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer de entrada
+    std::getline(std::cin, nombre);
+
+    std::cout << "Ingrese edad: " << std::endl;
+    while (!(std::cin >> edad)) {
+        std::cin.clear(); // Clear error flag
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard invalid input
+        std::cout << "Por favor, ingrese una edad válida: ";
+    }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer de entrada
+
+    if (edad >= 60) {
         preferencia = "Tercera edad";
-    }else{
-        std::cout<<"discapacidad (1) / embarazada (2) / nada (3)"<<std::endl;
-        std::cin>>opcion;
-        switch (opcion)
-        {
+    } else {
+        std::cout << "discapacidad (1) / embarazada (2) / nada (3)" << std::endl;
+        while (!(std::cin >> opcion) || opcion < 1 || opcion > 3) {
+            std::cin.clear(); // Clear error flag
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard invalid input
+            std::cout << "Opción ingresada no válida. Por favor, ingrese una opción válida (1/2/3): ";
+        }
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer de entrada
+        switch (opcion) {
         case 1:
             preferencia = "discapacidad";
             break;
@@ -138,10 +149,10 @@ void dar_numero(std::queue<Cliente*> &cola_comun,
         }
     }
     
-    if(preferencia == "nada"){
+    if (preferencia == "nada") {
         Cliente* cliente = new Cliente(nombre, edad);
         cola_comun.push(cliente);
-    }else{
+    } else {
         ClientePreferencial* clientepref = new ClientePreferencial(nombre, edad, preferencia);
         cola_preferencial.push(clientepref);
     }
@@ -211,15 +222,17 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
             std::cout<<cliente ->getNombre()<<std::endl;
             
             cola_pref.pop();
+            delete cliente;
         }
         //segundo, atender a los clientes de la cola comun
         while(!cola_comun.empty()){
             Cliente* cliente = cola_comun.front();
             
             cola_comun.pop();
+            delete cliente;
         }
     }
-
+    
 }
 
 
@@ -251,7 +264,7 @@ void Menu(Bodega* &bodega){
         GestionarVenta(cola_comun,colapref_final,bodega);
         break;
     case 2:
-        //GestionarVenta();
+        GestionarVenta(cola_comun,colapref_final,bodega);
         break;
     case 3:
      std::cout << "Saliendo del programa..." << std::endl;
@@ -259,10 +272,13 @@ void Menu(Bodega* &bodega){
     }
 }
 
+
+
 int main(){
     Bodega* bodega = new Bodega();
     if(leerArchivoBodega(bodega) == 0){
         Menu(bodega);
     }
+    delete bodega;
     return 0;
 };
