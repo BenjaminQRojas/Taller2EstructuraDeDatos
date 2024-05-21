@@ -60,49 +60,46 @@ int leerArchivoBodega(Bodega* &bodega){
     return 0;
 }
 
-
-
-/*
-
-void generarVenta(Bodega& bodega,std::vector<std::string>& productos){
+void generarVenta(Bodega& bodega,std::vector<Producto*> &productos){
     std::cout<< "**GESTIONAR VENTA**" << std::endl;
     std::cout << "Se generó la venta con los siguientes productos:\n";
     // Recorre la lista de productos vendidos
-    for (const std::string& nombreProducto : productos) {
-        // Busca el producto en la bodega
-        Producto* producto = bodega.obtenerProducto(nombreProducto);
-        if (producto != nullptr) {
-            // Resta el stock vendido del producto
-            int stockActual = bodega.obtenerStockProducto(nombreProducto);
-            int cantidadVendida = 1; // Suponiendo que se vende una unidad a la vez
-            bodega.actualizarStock(nombreProducto, stockActual - cantidadVendida);
-            // Verifica si el stock es menor o igual a cero y elimina el producto si es el caso
-            if (bodega.obtenerStockProducto(nombreProducto) <= 0) {
-                // Aquí podrías implementar lógica adicional si un producto se queda sin stock
-            }
-        } else {
-            std::cerr << "Error: Producto no encontrado en la bodega: " << nombreProducto << std::endl;
-            // Aquí podrías manejar la situación de un producto no encontrado de otra manera si lo deseas
-        }
+    int precioTotal = 0;
+    for (Producto* producto : productos) {
+        precioTotal += producto -> getPrecio();
+        // Resta el stock vendido del producto
+        //int stockActual = bodega.obtenerStockProducto(nombreProducto);
+        //int cantidadVendida = 1; // Suponiendo que se vende una unidad a la vez
+        //bodega.actualizarStock(nombreProducto, stockActual - cantidadVendida);
+        // Verifica si el stock es menor o igual a cero y elimina el producto si es el caso
+        //if (bodega.obtenerStockProducto(nombreProducto) <= 0) {
+            // Aquí podrías implementar lógica adicional si un producto se queda sin stock
+        //}
+        
     }
 
 } 
-*/ 
-void ingresarPedido(Bodega* &bodega){
-    std::vector<std::string> productosSolicitados;
+
+std::vector<Producto*> ingresarPedido(Bodega* &bodega){
+    std::vector<Producto*> productosSolicitados;
     std::cout << "Ingrese los productos que el cliente solicita (Ingrese 'fin' para finalizar):\n";
     std::string producto;
     while (true) {
         std::cout << "Producto: ";
         std::getline(std::cin, producto);
-        // si producto no esta 
-
+        Producto* productoObtenido = bodega-> obtenerProducto(producto);
+        // Agregar el producto a la lista
+        if(bodega->obtenerProducto(producto) != nullptr){
+            productosSolicitados.push_back(productoObtenido);
+        }else {
+            std::cerr << "Error: Producto no encontrado en la bodega: " << producto << std::endl;
+            // Aquí podrías manejar la situación de un producto no encontrado de otra manera si lo deseas
+        }
         if (producto == "fin") {
             break;  // Salir del bucle si se ingresa 'fin'
-        }
-
-        productosSolicitados.push_back(producto);  // Agregar el producto a la lista
+        } 
     }
+    return productosSolicitados;
     //llamar a una función para generar la venta con los productos ingresados
     //generarVenta(bodega,productosSolicitados);
 }
@@ -219,7 +216,11 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
         //primero atender a los clientes de la cola preferencial
         while(!cola_pref.empty()){
             ClientePreferencial* cliente = cola_pref.front();
-            std::cout<<cliente ->getNombre()<<std::endl;
+            //mostrar productos
+            std::cout<<"Hola "<<cliente->getNombre()<<std::endl;
+            std::cout<<bodega -> obtenerTodosLosProductos()<<std::endl;
+            //pedir productos
+            std::vector<Producto*> productosPedidos = ingresarPedido(bodega);
             
             cola_pref.pop();
             delete cliente;
@@ -227,7 +228,12 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
         //segundo, atender a los clientes de la cola comun
         while(!cola_comun.empty()){
             Cliente* cliente = cola_comun.front();
-            
+            //mostrar productos
+            std::cout<<"Hola "<<cliente->getNombre()<<std::endl;
+            std::cout<<bodega -> obtenerTodosLosProductos()<<std::endl;
+            //pedir productos
+            std::vector<Producto*> productosPedidos = ingresarPedido(bodega);
+
             cola_comun.pop();
             delete cliente;
         }
