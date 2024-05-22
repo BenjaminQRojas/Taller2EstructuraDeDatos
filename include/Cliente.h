@@ -1,5 +1,4 @@
 #pragma once
-#include "Producto.h"
 #include <vector>
 #include <iostream>
 
@@ -7,7 +6,6 @@ class Cliente{
     private:
         std::string nombre;
         int edad;
-        std::vector<Producto*> carrito;
     public:
         //constructor vacio cliente
         Cliente();
@@ -21,14 +19,6 @@ class Cliente{
         std::string getNombre();
         //get parametro edad
         int getEdad();
-        //get vector carrito
-        std::vector<Producto*> getCarrito();
-        //metodo agregar producto a carrito
-        void agregarProducto(Producto* producto);
-        //metodo obtener producto del carrito
-        Producto* obtenerProductoI(int i);
-        //metodo vaciar carrito
-        void vaciarCarrito();
         //set nombre por un string
         void setNombre(std::string nombre);
         //set edad por un int

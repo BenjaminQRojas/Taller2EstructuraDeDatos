@@ -7,80 +7,56 @@
 #include "../include/Producto.h"
 #include "../include/Bodega.h"
 
-/**
- * Funcion para leer archio bodega y el archivo stock, para luego guardar los datos en la clase
- * bodega.
-*/
+
 
 int leerArchivoBodega(Bodega* &bodega){
     std::ifstream archivoBodega("data/Bodega.txt");
-    std::ifstream archivoStock("data/StockBodega.txt");
+    
     if (!archivoBodega.is_open()) {
         std::cerr << "El archivo de la bodega no se puede abrir." << std::endl;
         return -1; // Retorna un código de error
     }
-    if (!archivoStock.is_open()) {
-        std::cerr << "El archivo de stock no se puede abrir." << std::endl;
-        return -1; // Retorna un código de error
-    }
+    
     
     std::string lineaBodega;
-    std::string lineaStock;
-    while (std::getline(archivoBodega, lineaBodega) && std::getline(archivoStock,lineaStock)) {
+    while (std::getline(archivoBodega, lineaBodega)) {
         std::stringstream ssBodega(lineaBodega);
-        std::stringstream ssStock(lineaStock);
         std::string nombre, categoria, subcategoria;
         float precio;
-        int idProducto,idStock,stock;
+        int idProducto;
         char comma;
         if (std::getline(ssBodega,nombre, ',') &&
             std::getline(ssBodega, categoria , ',') &&
             std::getline(ssBodega,subcategoria, ',') &&
             (ssBodega >> precio >> comma) &&
             (ssBodega >> idProducto)){
-                if((ssStock >> idStock >> comma) && (ssStock >> stock)){
-                    // Crea un objeto Producto con los datos extraídos
-                    Producto* producto = new Producto(nombre,categoria, subcategoria, precio, idProducto);
-                    if(idProducto == idStock){
-                        // Agrega el producto a la bodega con su respectivo stock
-                        std::cout<<"producto "+nombre+" agregado con stock " << stock<<std::endl;
-                        bodega -> agregarProductos(nombre, producto, stock);
-                    }else{
-                        // Agrega el producto a la bodega con stock 0
-                        bodega -> agregarProductos(nombre, producto, 0);
-                    }
-                }
+                Producto* producto = new Producto(nombre,categoria, subcategoria, precio, idProducto);
+                bodega -> agregarProductos(nombre,producto);
         } else {
-            std::cerr << "Error al analizar las líneas: " +lineaBodega+ " "+lineaStock <<std::endl;
+            std::cerr << "Error al analizar las líneas: " +lineaBodega<<std::endl;
         }
     }
     // Cierra los archivos
     archivoBodega.close();
-    archivoStock.close();
     return 0;
 }
 
-void generarVenta(Bodega& bodega,std::vector<Producto*> &productos){
+std::string generarVenta(Bodega* &bodega,std::vector<Producto*> &productos){
     std::cout<< "**GESTIONAR VENTA**" << std::endl;
     std::cout << "Se generó la venta con los siguientes productos:\n";
     // Recorre la lista de productos vendidos
     int precioTotal = 0;
     for (Producto* producto : productos) {
+        std::cout<<producto ->getNombre()<<std::endl;
         precioTotal += producto -> getPrecio();
-        // Resta el stock vendido del producto
-        //int stockActual = bodega.obtenerStockProducto(nombreProducto);
-        //int cantidadVendida = 1; // Suponiendo que se vende una unidad a la vez
-        //bodega.actualizarStock(nombreProducto, stockActual - cantidadVendida);
-        // Verifica si el stock es menor o igual a cero y elimina el producto si es el caso
-        //if (bodega.obtenerStockProducto(nombreProducto) <= 0) {
-            // Aquí podrías implementar lógica adicional si un producto se queda sin stock
-        //}
         
     }
-
+    std::cout<<"total: "<<precioTotal<<std::endl;
+    std::string salida = "Venta total: "+precioTotal;
+    return salida;
 } 
 
-std::vector<Producto*> ingresarPedido(Bodega* &bodega){
+std::vector<Producto*> ingresarPedido(Bodega* &bodega,std::vector<std::string> ventas){
     std::vector<Producto*> productosSolicitados;
     std::cout << "Ingrese los productos que el cliente solicita (Ingrese 'fin' para finalizar):\n";
     std::string producto;
@@ -101,7 +77,8 @@ std::vector<Producto*> ingresarPedido(Bodega* &bodega){
     }
     return productosSolicitados;
     //llamar a una función para generar la venta con los productos ingresados
-    //generarVenta(bodega,productosSolicitados);
+    ventas.push_back(generarVenta(bodega,productosSolicitados));
+    
 }
 
 void dar_numero(std::queue<Cliente*> &cola_comun, 
@@ -210,6 +187,7 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
                     std::queue<ClientePreferencial*> &cola_pref,
                     Bodega* &bodega){
     int opcion=0;
+    std::vector<std::string> ventas;
     std::cout<< "**GESTIONAR VENTA**" << std::endl;
     //mientras una de las colas tenga personas
     while(!cola_comun.empty() || !cola_pref.empty()){
@@ -220,7 +198,7 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
             std::cout<<"Hola "<<cliente->getNombre()<<std::endl;
             std::cout<<bodega -> obtenerTodosLosProductos()<<std::endl;
             //pedir productos
-            std::vector<Producto*> productosPedidos = ingresarPedido(bodega);
+            std::vector<Producto*> productosPedidos = ingresarPedido(bodega,ventas);
             
             cola_pref.pop();
             delete cliente;
@@ -232,13 +210,15 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
             std::cout<<"Hola "<<cliente->getNombre()<<std::endl;
             std::cout<<bodega -> obtenerTodosLosProductos()<<std::endl;
             //pedir productos
-            std::vector<Producto*> productosPedidos = ingresarPedido(bodega);
+            std::vector<Producto*> productosPedidos = ingresarPedido(bodega,ventas);
 
             cola_comun.pop();
             delete cliente;
         }
     }
-    
+    if(guardarVenta(ventas) == 0){
+        std::cout<<"ventas guardadas"<<std::endl;
+    }
 }
 
 
@@ -246,16 +226,28 @@ int interfazUsuario(){
     int opcion=0;
     std::cout<< "Bienvenido" << std::endl;
     std::cout << "(1) Gestionar Clientes" << std::endl;
-    std::cout << "(2) Gestionar Venta" << std:: endl;
-    std::cout << "(3) salir" << std::endl;
+    std::cout << "(2) salir" << std::endl;
 
     std::cout << "Ingrese una opcion:" << std::endl;
-    while (!(std::cin >> opcion) || opcion < 1 || opcion > 3){
+    while (!(std::cin >> opcion) || opcion < 1 || opcion > 2){
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer
         std::cout << "Opción ingresada no válida. Por favor, ingrese una opción válida: ";
     }
     return opcion;
+}
+
+int guardarVenta(std::vector<std::string> ventas){
+    std::ofstream archivo("data/Ventas.txt");
+    if (!archivo.is_open()) {
+        std::cerr << "Error al abrir el archivo" << std::endl;
+        return -1;
+    }
+    for (const auto& venta : ventas) {
+        archivo << venta << std::endl;
+    }
+    archivo.close();
+    return 0;
 }
 
 void Menu(Bodega* &bodega){
@@ -277,8 +269,6 @@ void Menu(Bodega* &bodega){
         break;
     }
 }
-
-
 
 int main(){
     Bodega* bodega = new Bodega();
