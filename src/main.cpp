@@ -80,20 +80,19 @@ void ingresarPedido(Bodega* &bodega,std::vector<std::string> &ventas){
     while (true) {
         std::cout << "Producto: ";
         std::getline(std::cin, producto);
+        //Verifica si se ingreso fin para salir del bucle
+        if (producto == "fin") {
+            break;
+        }
         Producto* productoObtenido = bodega-> obtenerProducto(producto);
         // Agregar el producto a la lista
-        if(bodega->obtenerProducto(producto) != nullptr){
+        if(productoObtenido != nullptr){
             productosSolicitados.push_back(productoObtenido);
         }else {
             std::cerr << "Error: Producto no encontrado en la bodega: " << producto << std::endl;
-            // Aquí podrías manejar la situación de un producto no encontrado de otra manera si lo deseas
         }
-        if (producto == "fin") {
-            break;  // Salir del bucle si se ingresa 'fin'
-        } 
     }
-    
-    //llamar a una función para generar la venta con los productos ingresados
+    //llama a la función generarVenta para generar la venta con los productos ingresados
     ventas.push_back(generarVenta(bodega,productosSolicitados));
 }
 
