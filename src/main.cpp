@@ -1,4 +1,6 @@
 #include <queue>
+#include <ctime>
+#include <iomanip>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -41,14 +43,16 @@ int leerArchivoBodega(Bodega* &bodega){
     return 0;
 }
 
-int guardarVenta(std::vector<std::string> ventas){
+int guardarVenta(std::vector<std::string> &ventas){
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
     std::ofstream archivo("data/Ventas.txt");
     if (!archivo.is_open()) {
         std::cerr << "Error al abrir el archivo" << std::endl;
         return -1;
     }
     for (const auto& venta : ventas) {
-        archivo << venta << std::endl;
+        archivo <<"total: "+venta+" fecha: "<< std::put_time(&tm, "%d-%m-%Y ")<< std::endl;
     }
     archivo.close();
     return 0;
@@ -69,7 +73,7 @@ std::string generarVenta(Bodega* &bodega,std::vector<Producto*> &productos){
     return salida;
 }
 
-void ingresarPedido(Bodega* &bodega,std::vector<std::string> ventas){
+void ingresarPedido(Bodega* &bodega,std::vector<std::string> &ventas){
     std::vector<Producto*> productosSolicitados;
     std::cout << "Ingrese los productos que el cliente solicita (Ingrese 'fin' para finalizar):\n";
     std::string producto;
@@ -263,10 +267,7 @@ void Menu(Bodega* &bodega){
         GestionarVenta(cola_comun,colapref_final,bodega);
         break;
     case 2:
-        GestionarVenta(cola_comun,colapref_final,bodega);
-        break;
-    case 3:
-     std::cout << "Saliendo del programa..." << std::endl;
+        std::cout << "Saliendo del programa..." << std::endl;
         break;
     }
 }
