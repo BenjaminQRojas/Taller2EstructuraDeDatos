@@ -41,6 +41,19 @@ int leerArchivoBodega(Bodega* &bodega){
     return 0;
 }
 
+int guardarVenta(std::vector<std::string> ventas){
+    std::ofstream archivo("data/Ventas.txt");
+    if (!archivo.is_open()) {
+        std::cerr << "Error al abrir el archivo" << std::endl;
+        return -1;
+    }
+    for (const auto& venta : ventas) {
+        archivo << venta << std::endl;
+    }
+    archivo.close();
+    return 0;
+}
+
 std::string generarVenta(Bodega* &bodega,std::vector<Producto*> &productos){
     std::cout<< "**GESTIONAR VENTA**" << std::endl;
     std::cout << "Se generó la venta con los siguientes productos:\n";
@@ -54,9 +67,9 @@ std::string generarVenta(Bodega* &bodega,std::vector<Producto*> &productos){
     std::cout<<"total: "<<precioTotal<<std::endl;
     std::string salida = "Venta total: "+precioTotal;
     return salida;
-} 
+}
 
-std::vector<Producto*> ingresarPedido(Bodega* &bodega,std::vector<std::string> ventas){
+void ingresarPedido(Bodega* &bodega,std::vector<std::string> ventas){
     std::vector<Producto*> productosSolicitados;
     std::cout << "Ingrese los productos que el cliente solicita (Ingrese 'fin' para finalizar):\n";
     std::string producto;
@@ -75,10 +88,9 @@ std::vector<Producto*> ingresarPedido(Bodega* &bodega,std::vector<std::string> v
             break;  // Salir del bucle si se ingresa 'fin'
         } 
     }
-    return productosSolicitados;
+    
     //llamar a una función para generar la venta con los productos ingresados
     ventas.push_back(generarVenta(bodega,productosSolicitados));
-    
 }
 
 void dar_numero(std::queue<Cliente*> &cola_comun, 
@@ -198,8 +210,8 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
             std::cout<<"Hola "<<cliente->getNombre()<<std::endl;
             std::cout<<bodega -> obtenerTodosLosProductos()<<std::endl;
             //pedir productos
-            std::vector<Producto*> productosPedidos = ingresarPedido(bodega,ventas);
-            
+            ingresarPedido(bodega,ventas);
+            //eliminar cliente de la cola
             cola_pref.pop();
             delete cliente;
         }
@@ -210,8 +222,8 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
             std::cout<<"Hola "<<cliente->getNombre()<<std::endl;
             std::cout<<bodega -> obtenerTodosLosProductos()<<std::endl;
             //pedir productos
-            std::vector<Producto*> productosPedidos = ingresarPedido(bodega,ventas);
-
+            ingresarPedido(bodega,ventas);
+            //eliminar cliente de la cola
             cola_comun.pop();
             delete cliente;
         }
@@ -237,18 +249,7 @@ int interfazUsuario(){
     return opcion;
 }
 
-int guardarVenta(std::vector<std::string> ventas){
-    std::ofstream archivo("data/Ventas.txt");
-    if (!archivo.is_open()) {
-        std::cerr << "Error al abrir el archivo" << std::endl;
-        return -1;
-    }
-    for (const auto& venta : ventas) {
-        archivo << venta << std::endl;
-    }
-    archivo.close();
-    return 0;
-}
+
 
 void Menu(Bodega* &bodega){
     std::queue<Cliente*> cola_comun; 
