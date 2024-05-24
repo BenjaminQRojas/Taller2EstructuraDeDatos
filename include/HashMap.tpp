@@ -3,7 +3,7 @@
 template<typename K, typename V>
 HashMap<K, V>::HashMap(int cap) : capacity(cap), size(0) {
     table = new HashNode<K, V>*[capacity]();
-};
+}
 
 template<typename K, typename V>
 HashMap<K, V>::~HashMap() {

@@ -1,6 +1,4 @@
-#ifndef HASHMAP_H
-#define HASHMAP_H
-
+#pragma once
 #include <iostream>
 #include <stdexcept>
 
@@ -9,7 +7,6 @@ struct HashNode {
     K key;
     V value;
     HashNode* next;
-
     HashNode(K k, V v) : key(k), value(v), next(nullptr) {}
 };
 
@@ -34,5 +31,3 @@ public:
 };
 
 #include "HashMap.tpp"
-
-#endif // HASHMAP_H

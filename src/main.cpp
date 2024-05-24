@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "../include/HashMap.h"
 #include "../include/Cliente.h"
 #include "../include/ClientePreferencial.h"
 #include "../include/Producto.h"
