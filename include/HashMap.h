@@ -28,6 +28,8 @@ public:
     bool remove(K key);
     int getSize() const;
     bool isEmpty() const;
+    int getCapacity() const { return capacity; }
+    HashNode<K, V>** getTable() const { return table; }
 };
 
 #include "HashMap.tpp"
