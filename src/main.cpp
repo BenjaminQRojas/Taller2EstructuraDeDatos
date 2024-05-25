@@ -57,7 +57,7 @@ int guardarVenta(std::vector<std::string> &ventas){
 
 std::string generarVenta(Bodega* &bodega, std::vector<Producto*> &productos){
     std::cout<< "**GESTIONAR VENTA**" << std::endl;
-    std::cout << "Se generó la venta con los siguientes productos:\n";
+    std::cout << "Se genero la venta con los siguientes productos:\n";
     int precioTotal = 0;
     for (Producto* producto : productos) {
         std::cout<<producto ->getNombre()<<std::endl;
@@ -71,12 +71,14 @@ std::string generarVenta(Bodega* &bodega, std::vector<Producto*> &productos){
 void ingresarPedido(Bodega* &bodega, std::vector<std::string> &ventas){
     std::vector<Producto*> productosSolicitados;
     std::cout << "Ingrese los productos que el cliente solicita (Ingrese 'fin' para finalizar):\n";
+    std::cout << "No olividar ingresar el producto igual como aparece " << std :: endl;
     std::string producto;
     while (true) {
         std::cout << "Producto: ";
         std::getline(std::cin, producto);
+        
         if (producto == "fin") {
-            break;
+            break;// Termina el bucle cuando se ingresa "fin"
         }
         Producto* productoObtenido = bodega-> obtenerProducto(producto);
         if(productoObtenido != nullptr){
@@ -85,6 +87,7 @@ void ingresarPedido(Bodega* &bodega, std::vector<std::string> &ventas){
             std::cerr << "Error: Producto no encontrado en la bodega: " << producto << std::endl;
         }
     }
+    
     ventas.push_back(generarVenta(bodega,productosSolicitados));
 }
 
