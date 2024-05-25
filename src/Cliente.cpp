@@ -10,7 +10,7 @@ Cliente::Cliente(std::string nombre, int edad)
 
 Cliente::~Cliente()
 {
-    std::cout<<"destruir objeto cliente: "+nombre<<std::endl;
+    std::cout<<"Fin del cliente: "+nombre<<std::endl;
 };
 
 std::string Cliente::getNombre()
