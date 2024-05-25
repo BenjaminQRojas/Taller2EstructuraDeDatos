@@ -9,7 +9,7 @@ ClientePreferencial::ClientePreferencial(std::string nombre, int edad, std::stri
 
 ClientePreferencial::~ClientePreferencial()
 {
-    std::cout<<"detruyendo objeto cliente preferencial: "+getNombre()<<std::endl;
+    std::cout<<"Fin del cliente preferencial: "+getNombre()<<std::endl;
 };
 
 std::string ClientePreferencial::getPreferencia()
