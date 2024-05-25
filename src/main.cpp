@@ -204,6 +204,7 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
             ingresarPedido(bodega,ventas);
             cola_pref.pop();
             delete cliente;
+            std::cout<< "*******" << std::endl;
         }
         while(!cola_comun.empty()){
             Cliente* cliente = cola_comun.front();
@@ -212,6 +213,7 @@ void GestionarVenta(std::queue<Cliente*> &cola_comun,
             ingresarPedido(bodega,ventas);
             cola_comun.pop();
             delete cliente;
+            std::cout<< "*******" << std::endl;
         }
     }
     if(guardarVenta(ventas) == 0){
